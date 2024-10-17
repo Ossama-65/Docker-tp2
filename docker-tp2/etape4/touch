@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: http_stage3
+    ports:
+      - "83:83"
+    volumes:
+      - ./app:/app
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - tp2-network
+
+  php:
+    image: php:7.4-fpm
+    container_name: script
+    volumes:
+      - ./app:/app
+    depends_on:
+      - mysql
+    networks:
+      - tp2-network
+
+  mysql:
+    image: mysql:latest
+    container_name: data_new
+    environment:
+      MYSQL_ROOT_PASSWORD: example_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: root
+      MYSQL_PASSWORD: example_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tp2-network
+
+volumes:
+  mysql_data:
+
+networks:
+  tp2-network:
+    driver: bridge
+

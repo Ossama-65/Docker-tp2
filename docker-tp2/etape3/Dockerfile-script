@@ -1,0 +1,7 @@
+FROM php:7.4-fpm
+WORKDIR /app
+COPY ./app /app
+
+# Installe l'extension mysqli
+RUN docker-php-ext-install mysqli
+
